@@ -1,28 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<title>three.js webgl - GLTFloader + Sheen</title>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-		<link type="text/css" rel="stylesheet" href="main.css">
-		<style>
-			body {
-				background: #4a4a4a;
-			}
-		</style>
-	</head>
 
-	<body>
-		<div id="info">
-			<a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> - GLTFLoader + <a href="https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Khronos/KHR_materials_sheen" target="_blank" rel="noopener">KHR_materials_sheen</a><br />
-			Bould<a href="https://github.com/KhronosGroup/glTF-Sample-Models/tree/master/2.0/SheenChair" target="_blank" rel="noopener">glTF-Sample-Models</a>
-		</div>
+<head>
+	<title>BouldScene
+	</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<link type="text/css" rel="stylesheet" href="main.css">
+	<style>
+		body {
+			background: #4a4a4a;
+		}
+	</style>
+</head>
 
-		<!-- Import maps polyfill -->
-		<!-- Remove this when import maps will be widely supported -->
-		<script async src="https://unpkg.com/es-module-shims@1.3.6/dist/es-module-shims.js"></script>
+<body>
+	<div id="info">
+		<a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> - GLTFLoader + <a href=" "
+			target="_blank" rel="noopener">Bould®</a><br />
+		Bould Scene from <a href=" " target="_blank" rel="noopener">Bould®</a>
+	</div>
 
-		<script type="importmap">
+	<!-- Import maps polyfill -->
+	<!-- Remove this when import maps will be widely supported -->
+	<script async src="https://unpkg.com/es-module-shims@1.3.6/dist/es-module-shims.js"></script>
+
+	<script type="importmap">
 			{
 				"imports": {
 					"three": "../build/three.module.js",
@@ -31,100 +34,167 @@
 			}
 		</script>
 
-		<script type="module">
+	<script type="module">
 
-			import * as THREE from 'three';
+		import * as THREE from 'three';
 
-			import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-			import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-			import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+		import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+		import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+		import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+		import { RectAreaLightHelper } from 'three/addons/helpers/RectAreaLightHelper.js';
+		import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js';
 
-			import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+		import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-			let  camera, scene, renderer, controls;
-			init();
-			animate();
+		let camera, scene, renderer, controls;
 
-			function init() {
 
-				const container = document.createElement( 'div' );
-				document.body.appendChild( container );
+		init();
+		animate();
 
-				camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 100000 );
-				camera.position.z = 3200;
 
-				scene = new THREE.Scene();
+		function init() {
 
-				// model
+			const container = document.createElement('div');
+			document.body.appendChild(container);
 
-				new GLTFLoader()
-					.setPath( 'models/gltf/' )
-					.load( 'scene.glb', function ( gltf ) {
+			camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 100000);
+			camera.position.z = 3200;
 
-						scene.add( gltf.scene );
+			scene = new THREE.Scene();
 
-						const object = gltf.scene.getObjectByName( 'SheenChair_fabric' );
 
-						const gui = new GUI();
+			// model
 
-						gui.add( object.material, 'sheen', 0, 1 );
-						gui.open();
+			new GLTFLoader()
+				.setPath('models/gltf/')
+				.load('scene.glb', function (gltf) {
 
-					} );
+					scene.add(gltf.scene);
 
-				renderer = new THREE.WebGLRenderer( { antialias: true } );
-				renderer.setPixelRatio( window.devicePixelRatio );
-				renderer.setSize( window.innerWidth, window.innerHeight );
-				renderer.toneMapping = THREE.ACESFilmicToneMapping;
-				renderer.toneMappingExposure = 1;
-				renderer.outputEncoding = THREE.sRGBEncoding;
-				container.appendChild( renderer.domElement );
+					const object = gltf.scene.getObjectByName('Scene');
 
-				const environment = new RoomEnvironment();
-				const pmremGenerator = new THREE.PMREMGenerator( renderer );
 
-				scene.background = new THREE.Color( 0xbbbbbb );
-				scene.environment = pmremGenerator.fromScene( environment ).texture;
+				});
 
-				controls = new OrbitControls( camera, renderer.domElement );
-				controls.enableDamping = true;
-				controls.minDistance = 1;
-				controls.maxDistance = 10;
-				controls.target.set( 0, 0.35, 0 );
-				controls.update();
+			renderer = new THREE.WebGLRenderer({ antialias: true });
+			renderer.setPixelRatio(window.devicePixelRatio);
+			renderer.setSize(window.innerWidth, window.innerHeight);
+			renderer.toneMapping = THREE.ACESFilmicToneMapping;
+			renderer.toneMappingExposure = 1;
+			renderer.outputEncoding = THREE.sRGBEncoding;
+			container.appendChild(renderer.domElement);
 
-				window.addEventListener( 'resize', onWindowResize );
 
-			}
 
-			function onWindowResize() {
+			//Environment, HDRI, Background lighting
+			const environment = new RoomEnvironment();
+			scene.background = new THREE.Color( 0xbbbbbb );
 
-				camera.aspect = window.innerWidth / window.innerHeight;
-				camera.updateProjectionMatrix();
 
-				renderer.setSize( window.innerWidth, window.innerHeight );
+			//Lighting 
+			RectAreaLightUniformsLib.init();
 
-			}
+			const rectLight0 = new THREE.RectAreaLight(0xffffff, 10, .13, 4.66);
+			rectLight0.position.set(-3.73, 3.34, 1.38);
+			rectLight0.rotation.x = -Math.PI / 2;
+			scene.add(rectLight0);
 
-			//
+			const rectLight1 = new THREE.RectAreaLight(0xffffff, 10, .13, 4.66);
+			rectLight1.position.set(-1.33, 3.34, 1.38);
+			rectLight1.rotation.x = -Math.PI / 2;
+			scene.add(rectLight1);
 
-			function animate() {
+			const rectLight2 = new THREE.RectAreaLight(0xffffff, 10, .13, 4.66);
+			rectLight2.position.set(1.06, 3.34, 1.38);
+			rectLight2.rotation.x = -Math.PI / 2;
+			scene.add(rectLight2);
 
-				requestAnimationFrame( animate );
+			const rectLight3 = new THREE.RectAreaLight(0xffffff, 10, .13, 4.66);
+			rectLight3.position.set(3.46, 3.34, 1.38);
+			rectLight3.rotation.x = -Math.PI / 2;
+			scene.add(rectLight3);
 
-				controls.update(); // required if damping enabled
+			const boxLight0 = new THREE.RectAreaLight(0xffffff, 7, .52, .29);
+			boxLight0.position.set(-4.97, 2.99, 2.95);
+			boxLight0.rotation.x = -Math.PI / 2;
+			scene.add(boxLight0);
 
-				render();
+			const boxLight1 = new THREE.RectAreaLight(0xffffff, 7, .52, .29);
+			boxLight1.position.set(-4.97, 2.99, 3.7);
+			boxLight1.rotation.x = -Math.PI / 2;
+			scene.add(boxLight1);
 
-			}
+			const boxLight2 = new THREE.RectAreaLight(0xffffff, 7, .52, .29);
+			boxLight2.position.set(-4.97, 1.4, 2.6);
+			boxLight2.rotation.x = -Math.PI / 2;
+			scene.add(boxLight2);
 
-			function render() {
+			const boxLight3 = new THREE.RectAreaLight(0xffffff, 7, .52, .29);
+			boxLight3.position.set(-4.97, 1.4, 3.4);
+			boxLight3.rotation.x = -Math.PI / 2;
+			scene.add(boxLight3);
 
-				renderer.render( scene, camera );
+			const light = new THREE.AmbientLight(0x404040); // soft white light
+			scene.add(light);
 
-			}
 
-		</script>
 
-	</body>
+
+			scene.add(new RectAreaLightHelper(rectLight0));
+			scene.add(new RectAreaLightHelper(rectLight1));
+			scene.add(new RectAreaLightHelper(rectLight2));
+			scene.add(new RectAreaLightHelper(rectLight3));
+			scene.add(new RectAreaLightHelper(boxLight0));
+			scene.add(new RectAreaLightHelper(boxLight1));
+			scene.add(new RectAreaLightHelper(boxLight2));
+			scene.add(new RectAreaLightHelper(boxLight3));
+
+			controls = new OrbitControls(camera, renderer.domElement);
+			controls.enableDamping = true;
+			controls.minDistance = 1;
+			controls.maxDistance = 10;
+			controls.target.set(0, 0.35, 0);
+			controls.update();
+
+			window.addEventListener('resize', onWindowResize);
+
+		}
+
+		function onWindowResize() {
+
+			camera.aspect = window.innerWidth / window.innerHeight;
+			camera.updateProjectionMatrix();
+
+			renderer.setSize(window.innerWidth, window.innerHeight);
+
+		}
+
+		//
+
+		function animate() {
+
+			requestAnimationFrame(animate);
+
+			controls.update(); // required if damping enabled
+
+			render();
+
+			controls.update();
+			controls.position.x += (mouseX - camera.position.x) * .05;
+			controls.position.y += (- mouseY - camera.position.y) * .05;
+
+		}
+
+		function render() {
+
+			renderer.render(scene, camera);
+
+		}
+
+
+	</script>
+
+</body>
+
 </html>
